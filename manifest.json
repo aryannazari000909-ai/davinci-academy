@@ -1,11 +1,20 @@
 {
-  "name": "آکادمی داوینچی",
-  "short_name": "داوینچی",
+  "name": "DaVinci Academy",
+  "short_name": "DaVinci",
+  "description": "مسیر حرفه‌ای یادگیری DaVinci Resolve",
   "lang": "fa",
   "dir": "rtl",
-  "start_url": "./index.html",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1220",
-  "theme_color": "#101827",
-  "description": "برنامه هوشمند یادگیری DaVinci Resolve"
+  "background_color": "#0b0d10",
+  "theme_color": "#0b0d10",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }
