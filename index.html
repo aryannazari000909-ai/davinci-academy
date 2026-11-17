@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<meta name="description" content="برنامه هوشمند یادگیری DaVinci Resolve">
+<link rel="manifest" href="manifest.json">
+<title>آکادمی داوینچی</title>
+<style>
+:root{--bg:#0b1220;--panel:#121d30;--panel2:#19263b;--line:#2b3a52;--text:#f3f6fb;--muted:#a7b4c8;--green:#39c58a;--blue:#6ca8ff;--orange:#ffbf69}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#0b1220,#101a2b);color:var(--text);font-family:Tahoma,Arial,sans-serif;line-height:1.7}
+.app{max-width:760px;margin:auto;padding:18px 14px 40px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{font-size:20px;font-weight:800}.sub{color:var(--muted);font-size:12px}.pill{background:#173a32;color:#8ff0c3;padding:5px 10px;border-radius:99px;font-size:11px}
+.hero{background:linear-gradient(130deg,#1c3450,#15233a);border:1px solid #34506e;border-radius:22px;padding:20px;margin-bottom:14px}.hero h1{margin:4px 0;font-size:25px}.hero p{margin:0;color:#bdcbe0;font-size:13px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:18px}.stat{background:#0d1929aa;border:1px solid #354b65;border-radius:14px;padding:10px;text-align:center}.stat b{display:block;font-size:22px}.stat span{font-size:11px;color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.muted{color:var(--muted);font-size:12px}.bar{height:10px;background:#27364c;border-radius:99px;overflow:hidden;margin:8px 0}.bar>i{display:block;height:100%;background:linear-gradient(90deg,#27a977,#75e0b4);width:0%;border-radius:99px;transition:width .2s}
+select,textarea,input{font:inherit;color:var(--text);background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:11px;width:100%;outline:none}select{margin:8px 0 12px}
+h2{font-size:17px;margin:0 0 10px}.lesson{display:flex;align-items:center;gap:11px;background:var(--panel2);border:1px solid #293b55;border-radius:13px;padding:12px;margin:8px 0}.lesson input,.task input{width:20px;height:20px;accent-color:var(--green);flex:none}.lesson label{flex:1}.lesson small{display:block;color:var(--muted);font-size:11px}.task{display:flex;gap:10px;align-items:center;margin:10px 0;font-size:13px}.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:12px;padding:11px 14px;background:var(--green);color:#082318;font-weight:700;font:inherit;cursor:pointer}button.secondary{background:#26364e;color:var(--text);border:1px solid var(--line)}button:disabled{opacity:.35}
+textarea{min-height:85px;resize:vertical}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 2px;text-align:center;font-size:12px;color:var(--text)}.day.active{outline:2px solid var(--blue);background:#203a5b}.day.done{border-color:var(--green);color:#8ff0c3}.day.rest{color:var(--orange);font-size:10px}.footer{color:var(--muted);font-size:11px;text-align:center;margin-top:18px}
+.notice{background:#332b1c;border:1px solid #6d542d;color:#ffe0a8;padding:11px;border-radius:12px;font-size:12px;margin:12px 0}
+@media(min-width:600px){.app{padding-top:28px}.hero{padding:26px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top"><div><div class="brand">🎬 آکادمی داوینچی</div><div class="sub">همراه هوشمند یادگیری DaVinci Resolve</div></div><span class="pill">نسخه ۱.۰</span></header>
+  <section class="hero">
+    <div class="sub">مسیر ۸۲ درس · روزی ۳ ویدیو · همراه با تمرین</div>
+    <h1>هر روز یک قدم حرفه‌ای‌تر</h1>
+    <p>ویدیو را ببین، داخل نرم‌افزار اجرا کن، بعد تیک بزن. پیشرفتت خودکار ذخیره می‌شود.</p>
+    <div class="stats">
+      <div class="stat"><b id="watched">۰</b><span>درس تکمیل‌شده</span></div>
+      <div class="stat"><b id="percent">۰٪</b><span>پیشرفت دوره</span></div>
+      <div class="stat"><b id="streak">۰</b><span>روز تکمیل‌شده</span></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="row"><h2>پیشرفت کل دوره</h2><span class="muted" id="progressLabel">۰ از ۸۲</span></div>
+    <div class="bar"><i id="progressBar"></i></div>
+    <div class="muted">برنامه شامل ۲۸ روز آموزشی و یک روز مرور/استراحت پس از هر ۶ روز است.</div>
+  </section>
+  <section class="card">
+    <h2>برنامه امروز</h2>
+    <div class="muted" id="dateLabel"></div>
+    <label class="muted" for="daySelect">انتخاب روز برنامه</label>
+    <select id="daySelect"></select>
+    <div class="row"><strong id="dayTitle">روز ۱</strong><span class="pill" id="dayStatus">در حال انجام</span></div>
+    <div class="muted" id="lessonRange"></div>
+    <div id="lessonList"></div>
+    <div class="bar"><i id="dayBar"></i></div>
+    <div class="row"><span class="muted">ویدیوهای این روز</span><b id="dayCount">۰ از ۳</b></div>
+  </section>
+  <section class="card">
+    <h2>تمرین عملی روز</h2>
+    <div class="task"><input type="checkbox" id="p1"><label for="p1">نکات هر ویدیو را داخل DaVinci اجرا کردم.</label></div>
+    <div class="task"><input type="checkbox" id="p2"><label for="p2">یک خروجی یا تمرین واقعی ساختم.</label></div>
+    <div class="task"><input type="checkbox" id="p3"><label for="p3">خروجی را بازبینی و ایرادها را اصلاح کردم.</label></div>
+    <label class="muted" for="notes">یادداشت و سؤال‌های امروز</label>
+    <textarea id="notes" placeholder="امروز چه چیزی یاد گرفتم؟ کجا گیر کردم؟"></textarea>
+    <div class="btns"><button id="saveBtn">ذخیره پیشرفت</button><button class="secondary" id="resetDay">پاک‌کردن تیک‌های این روز</button></div>
+  </section>
+  <section class="card">
+    <h2>نقشه ۲۸ روز آموزشی</h2>
+    <div class="muted">روزهای سبز تکمیل شده‌اند؛ روزهای نارنجی برای استراحت و مرور هستند.</div>
+    <div class="days" id="calendar"></div>
+  </section>
+  <div class="notice">نکته: عنوان واقعی ۸۲ ویدیو هنوز در اختیار برنامه نیست؛ فعلاً شماره درس‌ها نمایش داده می‌شود. با واردکردن فهرست یا لینک دوره می‌توان عنوان هر درس را دقیق کرد.</div>
+  <div class="footer">اطلاعات روی همین دستگاه ذخیره می‌شود. برای جلوگیری از پاک‌شدن اطلاعات، داده‌های برنامه را از بخش پشتیبان‌گیری ذخیره کن.</div>
+  <section class="card">
+    <h2>پشتیبان‌گیری</h2><div class="muted">از پیشرفت و یادداشت‌هایت یک فایل پشتیبان بگیر یا قبلی را برگردان.</div>
+    <div class="btns"><button class="secondary" id="exportBtn">خروجی پشتیبان</button><button class="secondary" id="importBtn">بازیابی پشتیبان</button><input id="importFile" type="file" accept="application/json" hidden></div>
+  </section>
+</main>
+<script>
+const TOTAL=82, START=new Date(2026,10,17);
+const stateKey='davinci-academy-v1';
+let state=JSON.parse(localStorage.getItem(stateKey)||'{}');
+state.lessons=state.lessons||{};state.days=state.days||{};
+const fa=n=>new Intl.NumberFormat('fa-IR').format(n);
+function trainingDate(day){let d=new Date(START);d.setDate(d.getDate()+(day-1)+Math.floor((day-1)/6));return d}
+function dateFa(d){return new Intl.DateTimeFormat('fa-IR',{year:'numeric',month:'long',day:'numeric'}).format(d)}
+function range(day){let first=(day-1)*3+1;return [first,Math.min(first+2,TOTAL)]}
+function dayData(day){return state.days[day]||{p1:false,p2:false,p3:false,notes:''}}
+function save(){localStorage.setItem(stateKey,JSON.stringify(state));render()}
+function render(){
+ let count=Object.values(state.lessons).filter(Boolean).length;
+ let pct=Math.round(count/TOTAL*100);
+ document.getElementById('watched').textContent=fa(count);
+ document.getElementById('percent').textContent=fa(pct)+'٪';
+ document.getElementById('progressLabel').textContent=fa(count)+' از ۸۲';
+ document.getElementById('progressBar').style.width=pct+'%';
+ let completed=Array.from({length:28},(_,i)=>i+1).filter(d=>{let [a,b]=range(d);return Array.from({length:b-a+1},(_,j)=>a+j).every(n=>state.lessons[n])}).length;
+ document.getElementById('streak').textContent=fa(completed);
+ let day=Number(document.getElementById('daySelect').value||1),[a,b]=range(day),d=trainingDate(day),dd=dayData(day);
+ document.getElementById('dateLabel').textContent='تاریخ برنامه: '+dateFa(d);
+ document.getElementById('dayTitle').textContent='روز '+fa(day);
+ document.getElementById('lessonRange').textContent=`درس‌های ${fa(a)} تا ${fa(b)}`;
+ let list=document.getElementById('lessonList');list.innerHTML='';
+ for(let n=a;n<=b;n++){let div=document.createElement('div');div.className='lesson';let cb=document.createElement('input');cb.type='checkbox';cb.checked=!!state.lessons[n];cb.id='l'+n;cb.addEventListener('change',()=>{state.lessons[n]=cb.checked;save()});let lab=document.createElement('label');lab.htmlFor='l'+n;lab.innerHTML=`<strong>ویدیوی شماره ${fa(n)}</strong><small>تماشا + اجرای عملی در نرم‌افزار</small>`;div.append(cb,lab);list.append(div)}
+ let nDone=Array.from({length:b-a+1},(_,i)=>a+i).filter(n=>state.lessons[n]).length;
+ document.getElementById('dayCount').textContent=fa(nDone)+' از '+fa(b-a+1);
+ document.getElementById('dayBar').style.width=(nDone/(b-a+1)*100)+'%';
+ document.getElementById('dayStatus').textContent=nDone===b-a+1?'ویدیوها کامل شد':'در حال انجام';
+ ['p1','p2','p3'].forEach(k=>document.getElementById(k).checked=!!dd[k]);
+ document.getElementById('notes').value=dd.notes||'';
+ let cal=document.getElementById('calendar');cal.innerHTML='';
+ for(let d=1;d<=28;d++){let [x,y]=range(d),ok=Array.from({length:y-x+1},(_,i)=>x+i).every(n=>state.lessons[n]);let btn=document.createElement('button');btn.className='day'+(d===day?' active':'')+(ok?' done':'');btn.textContent=fa(d);btn.title=`روز ${d} · درس ${x} تا ${y}`;btn.addEventListener('click',()=>{document.getElementById('daySelect').value=d;render()});cal.append(btn);if(d%6===0&&d<28){let rest=document.createElement('div');rest.className='day rest';rest.textContent='مرور';cal.append(rest)}}
+}
+const sel=document.getElementById('daySelect');
+for(let d=1;d<=28;d++){let o=document.createElement('option');o.value=d;o.textContent=`روز ${fa(d)} — درس ${fa(range(d)[0])} تا ${fa(range(d)[1])}`;sel.append(o)}
+sel.addEventListener('change',render);
+['p1','p2','p3'].forEach(k=>document.getElementById(k).addEventListener('change',()=>{let d=sel.value,dd=dayData(d);dd[k]=document.getElementById(k).checked;state.days[d]=dd;localStorage.setItem(stateKey,JSON.stringify(state))}));
+document.getElementById('notes').addEventListener('input',()=>{let d=sel.value,dd=dayData(d);dd.notes=document.getElementById('notes').value;state.days[d]=dd;localStorage.setItem(stateKey,JSON.stringify(state))});
+document.getElementById('saveBtn').addEventListener('click',()=>{let d=sel.value,dd=dayData(d);['p1','p2','p3'].forEach(k=>dd[k]=document.getElementById(k).checked);dd.notes=document.getElementById('notes').value;state.days[d]=dd;save();alert('پیشرفت ذخیره شد.')});
+document.getElementById('resetDay').addEventListener('click',()=>{if(!confirm('تیک‌های ویدیو و تمرین این روز پاک شود؟'))return;let [a,b]=range(Number(sel.value));for(let n=a;n<=b;n++)delete state.lessons[n];delete state.days[sel.value];save()});
+document.getElementById('exportBtn').addEventListener('click',()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='davinci-progress-backup.json';a.click();URL.revokeObjectURL(url)});
+document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change',async e=>{let f=e.target.files[0];if(!f)return;try{state=JSON.parse(await f.text());save();alert('پشتیبان بازیابی شد.')}catch{alert('فایل پشتیبان معتبر نیست.')}});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+</script>
+</body></html>
